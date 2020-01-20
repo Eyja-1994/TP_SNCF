@@ -31,6 +31,10 @@
     notify:
       - restart mysql
       - restart httpd
+  - name: execute commands
+    shell:
+      cmd: cd var/www/html
+      cmd: rm -rf Docs
 #  - name: Execute the command in remote shell
 #    shell: 
 #      cmd: cd var/www/html
