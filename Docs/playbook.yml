@@ -1,0 +1,47 @@
+---
+- hosts: devserver
+  vars:
+    http_port: 80
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum:
+      name: httpd
+      state: latest
+  - name: ensure php is at the latest version
+    yum:
+      name: php
+      state: latest
+  - name: ensure mysql is at the latest version
+    yum:
+      name: mysql
+      state: latest
+  - name: Copy database dump file to remote host
+    copy:
+      src: SQL/sncf.sql
+      dest: /tmp
+  - name: script sncf.sql
+    mysql_db:
+      name: all
+      state: import
+      target: /tmp/sncf.sql
+  - git:
+    repo: https://github.com/Eyja-1994/TP_SNCF.git
+    dest: var/www/html
+    notify:
+      - restart mysql
+      - restart httpd
+#  - name: Execute the command in remote shell
+#    shell: 
+#      cmd: cd var/www/html
+#      cmd: git clone https://github.com/Eyja-1994/TP_SNCF.git
+  handlers:
+    - name: restart mysql
+      service: name=mysql
+               enabled=yes
+               state=restarted
+    - name: restart httpd
+      service: name=httpd
+               enabled=yes
+               state=restarted
+
