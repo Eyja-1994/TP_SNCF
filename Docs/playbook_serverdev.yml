@@ -24,13 +24,18 @@
     - start mariadb
   - name: Copy database dump file to remote host
     copy:
-      src: /DB/sncf.sql
+      src: DB/
       dest: /tmp/dataset
   - name: script sncf.sql
     mysql_db:
       name: all
       state: import
       target: /tmp/dataset/sncf.sql
+  - name: script insert.sql
+    mysql_db:
+      name: all
+      state: import
+      target: /tmp/dataset/insert.sql
   - name: execute commands
     shell:
       cmd: cd /var/www/html && git clone -b dev --single-branch  https://github.com/Eyja-1994/TP_SNCF.git
