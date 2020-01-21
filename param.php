@@ -1,6 +1,6 @@
 <?php
     $servername = "localhost";
-    $username = "root";
-    $password = "root";
+    $username = "user";
+    $password = "user";
     $dbname = "sncf";
 ?>
