@@ -20,5 +20,7 @@ CREATE TABLE IF NOT EXISTS tgv (
 	FOREIGN KEY (gare_arrive) REFERENCES gare(id_gare)
 );
 /*CREATE USER 'user'@'localhost' IDENTIFIED BY 'user';
-GRANT ALL PRIVILEGES ON * . * TO 'user'@'%';
-*\
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';
+flush privileges;
+*/
