@@ -12,40 +12,51 @@
     yum:
       name: php
       state: latest
-  - name: ensure mysql is at the latest version
+  - name: ensure php-mysql is at the latest version
     yum:
-      name: mysql
+      name: php-mysql
       state: latest
+  - name: ensure mariadb is at the latest version
+    yum:
+      name: mariadb-server
+      state: latest
+  - name: MySQL-python
+    yum:
+      name: MySQL-python
+      state: latest
+    notify:
+    - start mariadb
   - name: Copy database dump file to remote host
     copy:
-      src: SQL/sncf.sql
-      dest: /tmp
+      src: DB/
+      dest: /tmp/dataset
   - name: script sncf.sql
     mysql_db:
       name: all
       state: import
-      target: /tmp/sncf.sql
-  - git:
-    repo: https://github.com/Eyja-1994/TP_SNCF.git
-    dest: var/www/html
-    notify:
-      - restart mysql
-      - restart httpd
+      target: /tmp/dataset/sncf.sql
+  - name: script insert.sql
+    mysql_db:
+      name: all
+      state: import
+      target: /tmp/dataset/insert.sql
   - name: execute commands
     shell:
-      cmd: cd var/www/html
-      cmd: rm -rf Docs
-#  - name: Execute the command in remote shell
-#    shell: 
-#      cmd: cd var/www/html
-#      cmd: git clone https://github.com/Eyja-1994/TP_SNCF.git
-  handlers:
-    - name: restart mysql
-      service: name=mysql
-               enabled=yes
-               state=restarted
-    - name: restart httpd
-      service: name=httpd
-               enabled=yes
-               state=restarted
+      cmd: cd /var/www/html && git clone -b dev --single-branch  https://github.com/Eyja-1994/TP_SNCF.git
+    notify:
+    - restart httpd
+    - restart mariadb
 
+  handlers:
+    - name: start mariadb
+      service:
+        name: mariadb
+        state: started
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted
+    - name: restart mariadb
+      service:
+        name: mariadb
+        state: restarted
