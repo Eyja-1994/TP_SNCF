@@ -28,7 +28,7 @@
     - start mariadb
   - name: Copy database dump file to remote host
     copy:
-      src: DB/
+      src: DBDockerfile/script
       dest: /tmp/dataset
   - name: script sncf.sql
     mysql_db:

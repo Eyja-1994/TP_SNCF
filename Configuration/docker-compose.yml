@@ -1,0 +1,26 @@
+version : '3.1'
+services:
+  db:
+    build: ./DBDockerfile
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_ROOT_PASSWORD : "root"
+      MYSQL_DATABASE: "sncf"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+    expose:
+      - "3306"
+    networks:
+      - backend
+  httpdserver:
+    depends_on:
+      - "db"
+    build: ./ApplyDockerfile
+    ports:
+      - "8010:80"
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
