@@ -1,1 +1,2 @@
-$VERSION_APPLY=2
+#!/bin/bash
+export VERSION_APPLY=2
